@@ -22,13 +22,15 @@ import {
 } from '@mui/material';
 
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import UserListHead from './UserListHead';
+import UserListToolbar from './UserListToolbar';
+import UserMoreMenu from './UserMoreMenu';
 //
-import USERLIST from '../_mocks_/user';
+import USERLIST from '../../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
@@ -78,10 +80,7 @@ export default function User() {
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const ref = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [open, setOpenPopup] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
 
 
   const handleRequestSort = (event, property) => {
@@ -241,7 +240,7 @@ export default function User() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[15, 30, 60]}
             component="div"
             count={USERLIST.length}
             rowsPerPage={rowsPerPage}

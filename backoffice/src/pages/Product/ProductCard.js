@@ -4,10 +4,10 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // utils
-import { fCurrency } from '../../../utils/formatNumber';
+import { fCurrency } from '../../utils/formatNumber';
 //
-import Label from '../../Label';
-import ColorPreview from '../../ColorPreview';
+import Label from '../../components/Label';
+import ColorPreview from '../../components/ColorPreview';
 
 // ----------------------------------------------------------------------
 

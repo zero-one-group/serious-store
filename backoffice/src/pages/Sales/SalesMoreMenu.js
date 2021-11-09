@@ -7,9 +7,7 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 
-import UserPopup from './UserPopup';
-
-export default function UserMoreMenu(props) {
+export default function SalesMoreMenu(props) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpenPopup] = useState(false);
@@ -31,7 +29,7 @@ export default function UserMoreMenu(props) {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         
-        <MenuItem component={RouterLink} to={`/app/user/${props.dataLine.id}/details`} sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to={`/app/sales/${props.dataLine.id}/details`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24}/>
           </ListItemIcon>
@@ -46,9 +44,6 @@ export default function UserMoreMenu(props) {
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
-      <UserPopup
-          open={open}
-          setOpenPopup={setOpenPopup}/>
     </>
   );
 }

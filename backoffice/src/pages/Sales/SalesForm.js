@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useReducer } from "react";
 import { Link } from 'react-router-dom';
 import {
     Card,
@@ -21,102 +21,111 @@ import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Form, Col, Row } from 'react-bootstrap';
 import Page from '../../components/Page';
-import "../../components/style.css";
+import formReducer from "../../reducers/formReducer";
 import PRODUCTS from '../../_mocks_/products';
 import USERLIST from '../../_mocks_/user';
+import "../../components/style.css";
 
-class SalesForm extends Component{
-    state = {
-        customer: "",
-        orderDate: "",
-        address: "",
-        product: "",
-        unitPrice: "",
-        qty: "",
-        discount: "",
-        createdAt: "",
-        orderNumber: "",
-        orderDetails: [
-            {
-                orderDetailId: "",
-                product: "",
-                qty: "",
-                unitPrice: "",
-                discount: "",
-                subTotal: "",
-                orderNumber: "",
-                createdAt: "",
-            }
-        ],
-    };
+const TABLE_HEAD = [
+    { id: 'product', label: 'Produk', alignRight: false },
+    { id: 'qty', label: 'Qty', alignRight: true },
+    { id: 'unit_price', label: 'Harga Satuan', alignRight: true },
+    { id: 'discount', label: 'Diskon', alignRight: true },
+    { id: 'subtotal', label: 'Subtotal', alignRight: true },
+    { id: '' }
+];
 
-    TABLE_HEAD = [
-        { id: 'product', label: 'Product', alignRight: false },
-        { id: 'qty', label: 'Qty', alignRight: true },
-        { id: 'unit_price', label: 'Unit Price', alignRight: true },
-        { id: 'discount', label: 'Discount', alignRight: true },
-        { id: 'subtotal', label: 'Subtotal', alignRight: true },
-        { id: '' }
-    ];
+const initialState = {
+    customer: "",
+    orderDate: "",
+    address: "",
+    product: "",
+    unitPrice: "",
+    qty: "",
+    discount: "",
+    total: 0,
+    totalAmount: 0,
+    totalDiscount: 0,
+    createdAt: "",
+    orderNumber: "",
+    orderDetails: [],
+};
 
-    // componentDidMount = () => {
-    //     PRODUCTS.map((item)=> {
-    //         console.log(item);
-    //     })
-    // }
-
-    handleChange = (event) => {
-        
-    };
+function SalesForm() {
+    const [state, dispatch] = useReducer(formReducer, initialState);
     
-    handleAddItems = () => {
-        const state = this.state;
-        let orderDetails = state.orderDetails;
-        const discount = !state.discount ? 0 : state.discount
-        console.log(discount/100);
-        const subTotal = parseInt(state.qty) * parseInt(state.unitPrice) * (1 - discount/100)
-        console.log(parseInt(state.qty) * parseInt(state.unitPrice));
-        console.log(subTotal);
-        orderDetails.push({
-            product: state.product,
-            qty: state.qty,
-            unitPrice: state.unitPrice,
-            discount: state.discount,
-            subTotal: subTotal,
+    const handleAddItems = () => {
+        const {
+            product,
+            qty,
+            unitPrice,
+            discount,
+        } = state;
+
+        const disc = !discount ? 0 : discount;
+        const tDisc = parseInt(qty) * parseInt(unitPrice) * (disc/100) 
+        const subTotal = parseInt(qty) * parseInt(unitPrice) * (1 - disc/100)
+        const total = parseInt(qty) * parseInt(unitPrice)
+
+        state.orderDetails.push({
+            product,
+            qty,
+            unitPrice,
+            discount: disc,
+            subTotal
         });
-        this.setState({ orderDetails: orderDetails });
-        this.clearItems();
-        console.log(this.state.orderDetails);
+        countAmount(total, tDisc, subTotal)
+        dispatch({ type: "REMOVE-ORDER-ITEMS" });
+        return;
     };
 
-    disabledAddItems = ()=>{
-        const state = this.state;
+    const countAmount = (total, tDisc, subTotal)=>{
+        const totalAmount = state.totalAmount + subTotal;
+        const totalDisc = state.totalDiscount + tDisc;
+        const tot = state.total + total
+        dispatch({
+            type: "INPUT",
+            field: "total",
+            payload: tot,
+        });
+        dispatch({
+            type: "INPUT",
+            field: "totalAmount",
+            payload: totalAmount,
+        });
+        dispatch({
+            type: "INPUT",
+            field: "totalDiscount",
+            payload: totalDisc,
+        });
+    };
+
+    const disabledAddItems = ()=>{
+        const {
+            product,
+            qty,
+            unitPrice,
+        } = state;
+
         if (
-            !state.product ||
-            !state.unitPrice ||
-            !state.qty
-          ) {
+            !product ||
+            !unitPrice ||
+            !qty
+        ) {
             return true;
-          }
-          return false;
+        }
+        return false;
     }
 
-    clearItems = () => {
-        this.setState({
-            product: "",
-            unitPrice: "",
-            qty: "",
-            discount: "",
-        })
+    const handleOnchange = (event) => {
+        dispatch({
+            type: "INPUT",
+            field: event.target.name,
+            payload: event.target.value,
+        });
     };
 
-    handleOnchange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
-    render(){
-      const state = this.state;
-      const orderDetails = state.orderDetails
-      return (
+    return (
         <Page>
             <Stack direction="row" alignItems="right" mb={5} spacing={1}>
                 <Button
@@ -147,8 +156,8 @@ class SalesForm extends Component{
                             <Col size="sm" xs="12" md="5">
                                 <Form.Select
                                     size="sm"
-                                    onChange={this.handleOnchange}
-                                    value={this.state.customer}
+                                    onChange={handleOnchange}
+                                    value={state.customer}
                                     id="customer"
                                     name="customer"
                                 >
@@ -165,8 +174,8 @@ class SalesForm extends Component{
                                 <Form.Control
                                     size="sm"
                                     type="date"
-                                    onChange={this.handleOnchange}
-                                    value={this.state.orderDate}
+                                    onChange={handleOnchange}
+                                    value={state.orderDate}
                                     id="orderDate"
                                     name="orderDate"
                                 />
@@ -182,8 +191,8 @@ class SalesForm extends Component{
                                     placeholder="Alamat"
                                     style={{ height: '100px' }}
                                     size="sm"
-                                    onChange={this.handleOnchange}
-                                    value={this.state.address}
+                                    onChange={handleOnchange}
+                                    value={state.address}
                                     id="address"
                                     name="address"
                                 />
@@ -198,11 +207,11 @@ class SalesForm extends Component{
                             </Col>
                             <Col size="sm" xs="12" md="5">
                                 <Form.Select 
-                                  size="sm"
-                                  onChange={this.handleOnchange}
-                                  value={this.state.product}
-                                  id="product"
-                                  name="product"
+                                    size="sm"
+                                    onChange={handleOnchange}
+                                    value={state.product}
+                                    id="product"
+                                    name="product"
                                 >
                                     <option value={false}>Pilih Produk</option>
                                     {PRODUCTS.map(item => (
@@ -218,8 +227,8 @@ class SalesForm extends Component{
                                     size="sm"
                                     id="unitPrice"
                                     name="unitPrice"
-                                    value={this.state.unitPrice}
-                                    onChange={this.handleOnchange}
+                                    value={state.unitPrice}
+                                    onChange={handleOnchange}
                                 />
                             </Col>
                         </Row>
@@ -230,8 +239,8 @@ class SalesForm extends Component{
                             <Col size="sm" xs="12" md="2">
                                 <Form.Control
                                     size="sm"
-                                    onChange={this.handleOnchange}
-                                    value={this.state.qty}
+                                    onChange={handleOnchange}
+                                    value={state.qty}
                                     id="qty"
                                     name="qty"
                                 />
@@ -244,8 +253,8 @@ class SalesForm extends Component{
                                 <Form.Control
                                     size="sm"
                                     size="sm"
-                                    onChange={this.handleOnchange}
-                                    value={this.state.discount}
+                                    onChange={handleOnchange}
+                                    value={state.discount}
                                     id="discount"
                                     name="discount"
                                 />
@@ -258,8 +267,8 @@ class SalesForm extends Component{
                             <Button 
                                 variant="contained"
                                 startIcon={<Icon icon={plusFill} />}
-                                onClick={this.handleAddItems}
-                                disabled={this.disabledAddItems()}
+                                onClick={handleAddItems}
+                                disabled={disabledAddItems()}
                             >
                                 Tambahkan
                             </Button>
@@ -269,7 +278,7 @@ class SalesForm extends Component{
                             <Table sx={{ minWidth: 800 }}>
                                 <TableHead>
                                     <TableRow>
-                                        {this.TABLE_HEAD.map((head) =>(
+                                        {TABLE_HEAD.map((head) =>(
                                             <TableCell 
                                                 align={head.alignRight ? "right": "left"}
                                                 key={head.id}
@@ -279,9 +288,9 @@ class SalesForm extends Component{
                                         ))}
                                     </TableRow>
                                 </TableHead>
-                                {orderDetails.length > 0 ? (
+                                {state.orderDetails.length > 0 ? (
                                     <TableBody>
-                                        {orderDetails.map((detail)=>(
+                                        {state.orderDetails.map((detail)=>(
                                             <TableRow>
                                                 <TableCell align="left" key={detail.product}>{detail.product}</TableCell>
                                                 <TableCell align="right" key={detail.qty}>{detail.qty}</TableCell>
@@ -289,7 +298,7 @@ class SalesForm extends Component{
                                                 <TableCell align="right" key={detail.discount}>{detail.discount}</TableCell>
                                                 <TableCell align="right" key={detail.subTotal}>{detail.subTotal}</TableCell>
                                                 <TableCell align="right">
-                                                    <IconButton size="small" onClick={this.handleAddItems}>
+                                                    <IconButton size="small" onClick={handleAddItems}>
                                                         <Icon icon="fa-solid:trash" />
                                                     </IconButton>
                                                 </TableCell>
@@ -310,10 +319,19 @@ class SalesForm extends Component{
                         <Row className="mt-3">
                             <Col align="right" xs="1" md="6"></Col>
                             <Col align="right" md="3">
-                                <Form.Label column="sm" className="align-items-right"><h6>Discount</h6></Form.Label>
+                                <Form.Label column="sm" className="align-items-right"><h6>Total Harga</h6></Form.Label>
                             </Col>
                             <Col align="right" md="2">
-                                <Form.Label column="sm" className="align-items-right"><h6>Rp. 0</h6></Form.Label>
+                                <Form.Label column="sm" className="align-items-right"><h6>Rp. {state.total}</h6></Form.Label>
+                            </Col>
+                        </Row>
+                        <Row className="mt-1">
+                            <Col align="right" xs="1" md="6"></Col>
+                            <Col align="right" md="3">
+                                <Form.Label column="sm" className="align-items-right"><h6>Total Diskon</h6></Form.Label>
+                            </Col>
+                            <Col align="right" md="2">
+                                <Form.Label column="sm" className="align-items-right"><h6>Rp. {state.totalDiscount}</h6></Form.Label>
                             </Col>
                         </Row>
                         <Row className="mt-1">
@@ -322,15 +340,14 @@ class SalesForm extends Component{
                                 <Form.Label column="sm" className="align-items-right"><h6>Total</h6></Form.Label>
                             </Col>
                             <Col align="right" md="2">
-                                <Form.Label column="sm" className="align-items-right"><h6>Rp. 0</h6></Form.Label>
+                                <Form.Label column="sm" className="align-items-right"><h6>Rp. {state.totalAmount}</h6></Form.Label>
                             </Col>
                         </Row>
                     </Form>
                 </CardContent>
             </Card>
         </Page>
-      )
-    }
+    )
 }
 
 export default SalesForm;

@@ -27,6 +27,7 @@ export default function Router() {
         { path: 'user/:userId/details', element: <UserForm /> },
         { path: 'sales', element: <Sales /> },
         { path: 'sales/:orderId/details', element: <SalesForm /> },
+        { path: 'sales/new-order', element: <SalesForm /> },
         { path: 'products', element: <Products /> },
       ]
     },

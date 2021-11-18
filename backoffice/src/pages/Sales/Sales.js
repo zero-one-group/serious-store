@@ -144,7 +144,7 @@ function Sales() {
                     <Button
                         variant="contained"
                         component={RouterLink}
-                        to="#"
+                        to="/app/sales/new-order/"
                         startIcon={<Icon icon={plusFill} />}
                     >
                         New Order

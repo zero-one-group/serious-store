@@ -20,3 +20,15 @@
   max-width: 100%;
 }
 
+.image-user {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
+
+.image-product {
+  width: 200px;
+  height: 200px;
+}
+

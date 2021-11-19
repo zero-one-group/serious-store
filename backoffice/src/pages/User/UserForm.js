@@ -1,41 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useReducer } from "react";
 import {
     Card,
     CardContent,
     Container,
     Stack,
     Button,
-    Divider,
     Typography,
-    FormControl,
-    FormLabel,
-    FormGroup,
-    Paper,
-    styled,
-    OutlinedInput,
     CardMedia,
-    Avatar
+    Grid
 } from '@mui/material';
-import MuiGrid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import { Form, Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Page from '../../components/Page';
+import formReducer from "../../reducers/formReducer";
+
+import image from "./avatar_2.jpg"
 import "../../components/style.css";
-import image2 from "./avatar_2.jpg"
 
 const handleChange = (event) => {
     setRole(event.target.value);
 };
 
+const initialState = {
+    name: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    accessApp: "",
+    // TODO: Refactor image source
+    photo: image,
+};
+
+const roleValue = [
+    {},
+    { value: 'admin', label: 'Admin' },
+    { value: 'manager', label: 'Manager' },
+    { value: 'staff', label: 'Staff' },
+];
+
 function UserForm() {
+    const [state, dispatch] = useReducer(formReducer, initialState);
     const [role, setRole] = useState(false);
 
-    const roleValue = [
-        {},
-        { value: 'admin', label: 'Admin' },
-        { value: 'manager', label: 'Manager' },
-        { value: 'staff', label: 'Staff' },
-    ];
+    const handleOnchange = (event) => {
+        dispatch({
+            type: "INPUT",
+            field: event.target.name,
+            payload: event.target.value,
+        });
+    };
 
     return (
         <Page title="User">
@@ -45,80 +58,116 @@ function UserForm() {
                         variant="contained"
                         // component={RouterLink}
                         to="#"
-                        // startIcon={<Icon icon={plusFill} />}
                     >
                         Save
                     </Button>
                     <Button
                         variant="contained"
-                        // component={RouterLink}
+                        component={Link}
+                        to="/app/user/"
                         to="#"
-                        // startIcon={<Icon icon={plusFill} />}
                     >
                         Discard
                     </Button>
                 </Stack>
-                <Card>
-                    <CardContent spacing={100}>
-                        <Typography variant="h4" gutterBottom>
-                            User
-                        </Typography>
-                        <CardMedia
-                            component="img"
-                            alt="green iguana"
-                            sx={{ width: 151, height: 151 }}
-                            align="right"
-                            image={image2}
-                        />
-                        <br/>
-                        <Stack spacing={1}>
-                            <TextField 
-                                id="name"
-                                name="name"
-                                label="Name" 
-                                size="small"
-                                variant="standard"
-                                className="text-field-form"
-                            />
-                            <TextField 
-                                id="email"
-                                name="email"
-                                label="E-mail" 
-                                size="small"
-                                variant="standard"
-                                className="text-field-form"
-                            />
-                            <TextField 
-                                id="phoneNumber"
-                                name="phoneNumber"
-                                label="Phone" 
-                                size="small"
-                                variant="standard"
-                                className="text-field-form"
-                            /> 
-                            <TextField 
-                                select
-                                id="role"
-                                name="role"
-                                label="Role" 
-                                size="small"
-                                variant="standard"
-                                className="text-field-form"
-                                value={role}
-                                onChange={handleChange}
-                                SelectProps={{
-                                    native: true,
-                                }}
-                            >
-                                {roleValue.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                    {option.label}
-                                    </option>
-                                ))}
-                            </TextField>    
-                        </Stack>
-                    </CardContent>
-                </Card>
+                <Grid container spacing={2}>
+                    <Grid item xs="12" md="7" lg="7">
+                        <Card>
+                            <CardContent>
+                            <Typography className="mb-4" variant="h4" gutterBottom>
+                                User
+                            </Typography>
+                            <Form>
+                                <Row className="mb-3">
+                                    <Col md="3">
+                                        <Form.Label column="sm">Nama</Form.Label>
+                                    </Col>
+                                    <Col size="sm" xs="12" md="8">
+                                        <Form.Control
+                                            size="sm"
+                                            id="name"
+                                            name="name"
+                                            value={state.name}
+                                            onChange={handleOnchange}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Col md="3">
+                                        <Form.Label column="sm">E-Mail</Form.Label>
+                                    </Col>
+                                    <Col size="sm" xs="12" md="8">
+                                        <Form.Control
+                                            size="sm"
+                                            id="email"
+                                            name="email"
+                                            value={state.email}
+                                            onChange={handleOnchange}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Col md="3">
+                                        <Form.Label column="sm">Alamat</Form.Label>
+                                    </Col>
+                                    <Col size="sm" xs="12" md="8">
+                                        <Form.Control
+                                            size="sm"
+                                            id="address"
+                                            name="address"
+                                            as="textarea"
+                                            placeholder="Alamat"
+                                            style={{ height: '100px' }}
+                                            value={state.address}
+                                            onChange={handleOnchange}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Col md="3">
+                                        <Form.Label column="sm">No Tlp</Form.Label>
+                                    </Col>
+                                    <Col size="sm" xs="12" md="8">
+                                        <Form.Control
+                                            size="sm"
+                                            id="phoneNumber"
+                                            name="phoneNumber"
+                                            value={state.phoneNumber}
+                                            onChange={handleOnchange}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Col md="3">
+                                        <Form.Label column="sm">Akses Aplikasi</Form.Label>
+                                    </Col>
+                                    <Col size="sm" xs="12" md="8">
+                                        <Form.Control
+                                            size="sm"
+                                            id="accessApp"
+                                            name="accessApp"
+                                            value={state.accessApp}
+                                            onChange={handleOnchange}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Form>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item item xs="12" md="5" lg="5">
+                        <Card>
+                            <CardContent>
+                                <CardMedia
+                                    component="img"
+                                    alt="Image User"
+                                    className="image-user"
+                                    image={state.photo}
+                                />
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
             </Container>
         </Page>
     )

@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import DashboardApp from './pages/Dashboard/DashboardApp';
 import Products from './pages/Product/Products';
+import ProductForm from './pages/Product/ProductForm';
 import User from './pages/User/User';
 import UserForm from './pages/User/UserForm';
 import Sales from './pages/Sales/Sales';
@@ -25,10 +26,13 @@ export default function Router() {
         { path: 'dashboard', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'user/:userId/details', element: <UserForm /> },
+        { path: 'user/new-user', element: <UserForm /> },
         { path: 'sales', element: <Sales /> },
         { path: 'sales/:orderId/details', element: <SalesForm /> },
         { path: 'sales/new-order', element: <SalesForm /> },
         { path: 'products', element: <Products /> },
+        { path: 'products/:productId/details', element: <ProductForm /> },
+        { path: 'products/new-product', element: <ProductForm /> },
       ]
     },
     {

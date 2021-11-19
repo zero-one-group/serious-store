@@ -145,7 +145,7 @@ export default function User() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="/app/user/new-user/"
             startIcon={<Icon icon={plusFill} />}
           >
             New User

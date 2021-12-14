@@ -3,18 +3,18 @@ import { Box, Grid, Container, Typography } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import {
-  AppTasks,
-  AppNewUsers,
-  AppBugReports,
-  AppItemOrders,
-  AppNewsUpdate,
-  AppWeeklySales,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppCurrentSubject,
-  AppConversionRates
+  Tasks,
+  NewUsers,
+  BugReports,
+  ItemOrders,
+  NewsUpdate,
+  WeeklySales,
+  OrderTimeline,
+  CurrentVisits,
+  WebsiteVisits,
+  TrafficBySite,
+  CurrentSubject,
+  ConversionRates
 } from '../../components/_dashboard/app';
 
 // ----------------------------------------------------------------------
@@ -28,48 +28,48 @@ export default function Dashboard() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWeeklySales />
+            <WeeklySales />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppNewUsers />
+            <NewUsers />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppItemOrders />
+            <ItemOrders />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <AppBugReports />
+            <BugReports />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits />
+            <WebsiteVisits />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits />
+            <CurrentVisits />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates />
+            <ConversionRates />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject />
+            <CurrentSubject />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate />
+            <NewsUpdate />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline />
+            <OrderTimeline />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppTrafficBySite />
+            <TrafficBySite />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppTasks />
+            <Tasks />
           </Grid>
         </Grid>
       </Container>
